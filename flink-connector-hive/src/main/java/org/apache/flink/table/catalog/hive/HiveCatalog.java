@@ -254,11 +254,14 @@ public class HiveCatalog extends AbstractCatalog {
         if (hadoopConf == null) {
             hadoopConf = new Configuration();
         }
-        // ignore all the static conf file URLs that HiveConf may have set
+        // ignore all the static conf file URLs that HiveConf may have
+        URL originalHiveSiteURL = HiveConf.getHiveSiteLocation();
         HiveConf.setHiveSiteLocation(null);
         HiveConf.setLoadMetastoreConfig(false);
         HiveConf.setLoadHiveServer2Config(false);
         HiveConf hiveConf = new HiveConf(hadoopConf, HiveConf.class);
+        // set it back if there was a hive-site.xml to keep HiveConf behaviour as expected
+        HiveConf.setHiveSiteLocation(originalHiveSiteURL);
 
         LOG.info("Setting hive conf dir as {}", hiveConfDir);
 
